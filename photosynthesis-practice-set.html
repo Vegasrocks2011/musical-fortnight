@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Photosynthesis — mark yourself like an examiner</title>
+<style>
+:root{
+  --desk:#E7EDE9;
+  --paper:#FFFFFF;
+  --ink:#1B1B1B;
+  --ink-soft:#5A625D;
+  --rule:#D9E0DB;
+  --green:#2F6B4F;
+  --green-deep:#12281F;
+  --green-pale:#EAF2ED;
+  --tick:#177C48;
+  --pen:#A8291B;
+  --pen-pale:#FBEDEB;
+  --amber:#9A6B00;
+  --amber-pale:#FCF4E0;
+  --focus:#0B7BC1;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--desk);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:17px;line-height:1.5;
+}
+.serif{font-family:Georgia,"Times New Roman",serif}
+
+/* ---------- masthead ---------- */
+header{background:var(--green-deep);color:#fff;padding:26px 0 0}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px}
+h1{margin:0 0 6px;font-family:Georgia,"Times New Roman",serif;font-size:30px;font-weight:700;letter-spacing:-.01em}
+.sub{margin:0 0 20px;color:#AFC9BB;font-size:15.5px;max-width:60ch}
+
+.tally{
+  display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+  border-radius:4px;padding:12px 16px;margin-bottom:22px;
+}
+.tally b{font-family:Georgia,serif;font-size:26px;font-weight:700;color:#fff}
+.tally span{color:#AFC9BB;font-size:14.5px}
+.tally .seg{color:#DCEAE2;font-size:14.5px}
+
+nav{display:flex;gap:2px;flex-wrap:wrap}
+nav button{
+  appearance:none;border:0;cursor:pointer;font:inherit;font-size:15px;
+  background:rgba(255,255,255,.09);color:#CFE2D7;
+  padding:11px 17px;border-radius:4px 4px 0 0;
+}
+nav button:hover{background:rgba(255,255,255,.16);color:#fff}
+nav button[aria-selected="true"]{background:var(--desk);color:var(--green-deep);font-weight:600}
+nav button:focus-visible,.tab button:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+main{max-width:940px;margin:0 auto;padding:26px 20px 90px}
+.intro{margin:0 0 24px;max-width:66ch;color:#3B443E;font-size:16.5px}
+.intro strong{color:var(--ink)}
+
+/* ---------- exam paper ---------- */
+.q{
+  background:var(--paper);border:1px solid var(--rule);border-radius:3px;
+  padding:22px 24px;margin-bottom:18px;
+}
+.qhead{display:flex;gap:14px;align-items:flex-start;justify-content:space-between}
+.qno{font-size:14px;color:var(--ink-soft);font-weight:600;white-space:nowrap}
+.tariff{font-size:15px;color:var(--ink-soft);white-space:nowrap;padding-left:12px}
+.stem{margin:8px 0 4px;font-size:17.5px}
+.context{margin:0 0 10px;color:#3B443E;font-size:16px}
+
+/* ---------- MCQ ---------- */
+.opts{list-style:none;margin:12px 0 0;padding:0}
+.opts li{margin:0 0 7px}
+.opt{
+  display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;
+  background:#fff;border:1px solid var(--rule);border-radius:3px;
+  padding:11px 14px;font:inherit;font-size:16.5px;color:var(--ink);cursor:pointer;
+}
+.opt:hover:not(:disabled){border-color:var(--green);background:var(--green-pale)}
+.opt:disabled{cursor:default}
+.opt .letter{
+  flex:0 0 auto;width:24px;height:24px;border:1px solid var(--rule);border-radius:2px;
+  display:grid;place-items:center;font-size:14px;font-weight:600;color:var(--ink-soft)
+}
+.opt.right{border-color:var(--tick);background:#EBF7F0}
+.opt.right .letter{background:var(--tick);border-color:var(--tick);color:#fff}
+.opt.wrong{border-color:var(--pen);background:var(--pen-pale)}
+.opt.wrong .letter{background:var(--pen);border-color:var(--pen);color:#fff}
+.opt.dim{opacity:.55}
+
+.verdict{
+  margin:12px 0 0;padding:13px 15px;border-radius:3px;font-size:16px;
+  border-left:3px solid var(--green);background:var(--green-pale);
+}
+.verdict.miss{border-left-color:var(--pen);background:var(--pen-pale)}
+.verdict p{margin:0 0 7px}
+.verdict p:last-child{margin:0}
+.verdict .head{font-weight:700}
+
+/* ---------- written answers ---------- */
+textarea{
+  width:100%;margin-top:12px;border:1px solid var(--rule);border-radius:3px;
+  padding:6px 12px 8px;font:inherit;font-size:16.5px;color:var(--ink);
+  line-height:29px;min-height:120px;resize:vertical;background:#fff;
+  background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 34px,var(--rule) 34px,var(--rule) 35px);
+  background-attachment:local;
+}
+textarea:focus{outline:3px solid var(--focus);outline-offset:1px;border-color:var(--green)}
+
+.reveal{
+  appearance:none;cursor:pointer;font:inherit;font-size:15.5px;font-weight:600;
+  margin-top:14px;padding:10px 18px;border-radius:3px;
+  background:var(--green-deep);color:#fff;border:1px solid var(--green-deep);
+}
+.reveal:hover{background:var(--green)}
+.reveal:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+/* ---------- mark scheme ---------- */
+.ms{margin-top:16px;border-top:2px solid var(--green-deep);padding-top:16px}
+.ms[hidden]{display:none}
+.ms h3{
+  margin:0 0 4px;font-family:Georgia,serif;font-size:18px;font-weight:700;color:var(--green-deep)
+}
+.ms .rule{margin:0 0 13px;font-size:15px;color:var(--ink-soft)}
+.mp{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:11px 13px;border:1px solid var(--rule);border-radius:3px;margin-bottom:7px;
+  cursor:pointer;background:#fff;
+}
+.mp:hover{border-color:var(--green)}
+.mp input{
+  flex:0 0 auto;width:20px;height:20px;margin:2px 0 0;accent-color:var(--tick);cursor:pointer;
+}
+.mp.got{background:#EBF7F0;border-color:var(--tick)}
+.mp .body{flex:1}
+.mp .point{font-size:16.5px}
+.mp .note{display:block;margin-top:4px;font-size:14.5px;color:var(--ink-soft)}
+.mp .note.no{color:var(--pen)}
+.capnote{margin:4px 0 12px;font-size:14.5px;color:var(--ink-soft)}
+
+.watch{
+  margin-top:12px;padding:13px 15px;border-radius:3px;
+  background:var(--amber-pale);border-left:3px solid var(--amber);
+  font-family:Georgia,serif;font-size:16px;color:#4A3A10;
+}
+.watch b{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:13.5px;letter-spacing:.03em;display:block;margin-bottom:5px;color:var(--amber)}
+
+.scoreline{
+  margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);
+  font-size:15.5px;color:var(--ink-soft);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap
+}
+.scoreline b{color:var(--green-deep);font-size:17px}
+
+/* ---------- calculations ---------- */
+.steps{margin:0;padding:0;list-style:none;counter-reset:st}
+.steps li{
+  position:relative;padding:10px 0 10px 40px;border-bottom:1px solid var(--rule);font-size:16.5px
+}
+.steps li:last-child{border-bottom:0}
+.steps li::before{
+  counter-increment:st;content:counter(st);
+  position:absolute;left:0;top:10px;width:26px;height:26px;border-radius:50%;
+  background:var(--green);color:#fff;display:grid;place-items:center;font-size:14px;font-weight:600
+}
+.answerbox{
+  display:inline-block;min-width:190px;border:1px solid var(--rule);border-bottom:2px solid var(--ink);
+  border-radius:3px;padding:8px 12px;font:inherit;font-size:16.5px;margin-top:10px
+}
+.answerbox:focus{outline:3px solid var(--focus);outline-offset:1px}
+
+/* ---------- summary ---------- */
+.panel{background:var(--paper);border:1px solid var(--rule);border-radius:3px;padding:24px;margin-bottom:18px}
+.bigscore{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end;margin-bottom:6px}
+.bigscore .n{font-family:Georgia,serif;font-size:58px;line-height:1;font-weight:700;color:var(--green-deep)}
+.bigscore .of{font-size:17px;color:var(--ink-soft);padding-bottom:8px}
+.bar{height:10px;background:var(--rule);border-radius:5px;overflow:hidden;margin:16px 0 22px}
+.bar i{display:block;height:100%;background:var(--green);width:0;transition:width .5s ease}
+.breakdown{width:100%;border-collapse:collapse;font-size:16.5px}
+.breakdown th,.breakdown td{text-align:left;padding:10px 0;border-bottom:1px solid var(--rule)}
+.breakdown th{font-size:14.5px;color:var(--ink-soft);font-weight:600}
+.breakdown td:last-child,.breakdown th:last-child{text-align:right;white-space:nowrap}
+
+.rag{margin-top:8px}
+.ragrow{display:flex;gap:12px;align-items:center;justify-content:space-between;
+  padding:12px 0;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.ragrow:last-child{border-bottom:0}
+.ragrow .lab{flex:1;min-width:230px;font-size:16.5px}
+.ragbtns{display:flex;gap:6px}
+.ragbtns button{
+  appearance:none;cursor:pointer;font:inherit;font-size:14.5px;font-weight:600;
+  border:1px solid var(--rule);background:#fff;color:var(--ink-soft);
+  padding:7px 15px;border-radius:3px
+}
+.ragbtns button:hover{border-color:var(--ink-soft)}
+.ragbtns button[aria-pressed="true"][data-v="r"]{background:var(--pen);border-color:var(--pen);color:#fff}
+.ragbtns button[aria-pressed="true"][data-v="a"]{background:var(--amber);border-color:var(--amber);color:#fff}
+.ragbtns button[aria-pressed="true"][data-v="g"]{background:var(--tick);border-color:var(--tick);color:#fff}
+
+#advice li{margin-bottom:11px;font-size:16.5px}
+#advice ul{padding-left:22px;margin:10px 0 0}
+.empty{color:var(--ink-soft);font-size:16.5px}
+
+.tab[hidden]{display:none}
+h2{font-family:Georgia,serif;font-size:23px;margin:0 0 6px;color:var(--green-deep)}
+
+@media (max-width:640px){
+  h1{font-size:24px}
+  .q{padding:18px 16px}
+  main{padding:20px 14px 70px}
+  nav button{padding:10px 13px;font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  header{background:#fff;color:#000}
+  nav,.reveal,.tally{display:none}
+  .tab[hidden]{display:block!important}
+  .ms{display:block!important}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>Mark yourself like an examiner</h1>
+    <p class="sub">Photosynthesis — the light-dependent and light-independent reactions. Write your answer first. Only then open the mark scheme, and tick honestly.</p>
+    <div class="tally">
+      <b id="tallyNum">0</b>
+      <span>of 52 marks</span>
+      <span class="seg" id="tallySeg">Multiple choice 0/12 &nbsp; Written 0/33 &nbsp; Calculations 0/7</span>
+    </div>
+    <nav role="tablist">
+      <button role="tab" data-tab="mcq" aria-selected="true">Multiple choice</button>
+      <button role="tab" data-tab="written" aria-selected="false">Written answers</button>
+      <button role="tab" data-tab="calc" aria-selected="false">Calculations</button>
+      <button role="tab" data-tab="summary" aria-selected="false">Your summary</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="tab" id="tab-mcq">
+    <h2>Multiple choice</h2>
+    <p class="intro">Twelve questions, one mark each. Choose an answer and you will see exactly what the examiners wrote about the wrong options — <strong>read those, they are where the marks go</strong>.</p>
+    <div id="mcqList"></div>
+  </section>
+
+  <section class="tab" id="tab-written" hidden>
+    <h2>Written answers</h2>
+    <p class="intro">Write in the box first, in full sentences. Then open the mark scheme and tick only the points you actually made — not the ones you meant to make. <strong>Ticking honestly is the whole exercise.</strong></p>
+    <div id="writtenList"></div>
+  </section>
+
+  <section class="tab" id="tab-calc" hidden>
+    <h2>Calculations</h2>
+    <p class="intro">Work each one out on paper, write your answer in the box, then check the method. <strong>Marks are available for the steps</strong>, so show them even when the final number goes wrong.</p>
+    <div id="calcList"></div>
+  </section>
+
+  <section class="tab" id="tab-summary" hidden>
+    <h2>Your summary</h2>
+    <p class="intro">Your score, then an honest rating against the six rules, then what to work on tonight.</p>
+
+    <div class="panel">
+      <div class="bigscore"><span class="n" id="sumNum">0</span><span class="of">out of 52 marks</span></div>
+      <div class="bar"><i id="sumBar"></i></div>
+      <table class="breakdown">
+        <tr><th>Section</th><th>Score</th></tr>
+        <tr><td>Multiple choice</td><td id="bdMcq">0 / 12</td></tr>
+        <tr><td>Written answers</td><td id="bdWri">0 / 33</td></tr>
+        <tr><td>Calculations</td><td id="bdCal">0 / 7</td></tr>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h3 style="margin:0 0 4px;font-family:Georgia,serif;font-size:19px;color:var(--green-deep)">How confident are you with the six rules?</h3>
+      <p style="margin:0 0 4px;font-size:15.5px;color:var(--ink-soft)">Red means you know you did not do it. Amber means sometimes. Green means every answer.</p>
+      <div class="rag" id="ragList"></div>
+    </div>
+
+    <div class="panel">
+      <h3 style="margin:0 0 10px;font-family:Georgia,serif;font-size:19px;color:var(--green-deep)">What to work on</h3>
+      <div id="advice"><p class="empty">Work through the questions and this fills in with the specific mark points you missed.</p></div>
+    </div>
+  </section>
+</main>
+
+<script>
+"use strict";
+
+/* ============ DATA ============ */
+
+const MCQ = [
+ {stem:"Which row shows where the light-dependent and light-independent reactions take place?",
+  opts:["Light-dependent: stroma &nbsp;|&nbsp; Light-independent: thylakoid membranes",
+        "Light-dependent: stroma &nbsp;|&nbsp; Light-independent: stroma",
+        "Light-dependent: thylakoid membranes &nbsp;|&nbsp; Light-independent: stroma",
+        "Light-dependent: thylakoid membranes &nbsp;|&nbsp; Light-independent: thylakoid membranes"],
+  ans:2,
+  why:"The light-dependent reactions happen on the thylakoid membranes, which hold the photosystems, electron carriers and ATP synthase. The Calvin cycle happens in the stroma, where RUBISCO is."},
+
+ {stem:"Where in the chloroplast is RUBISCO active?",
+  opts:["On a ribosome","In the stroma","On a thylakoid membrane","In a starch grain"],
+  ans:1,
+  why:"RUBISCO catalyses carbon fixation, which is part of the Calvin cycle, so it works in the stroma. Ribosomes make it; the thylakoid membrane is the light-dependent site; a starch grain is a store."},
+
+ {stem:"Which pair of light-dependent products is used in the light-independent reactions?",
+  opts:["ATP and oxidised NADP","ATP and oxygen","ATP and reduced NADP","Reduced NADP and oxygen"],
+  ans:2,
+  why:"NADP is reduced, not oxidised, and it is the reduced form that carries hydrogen to the Calvin cycle. Oxygen is a by-product released from photolysis, not a reactant in the Calvin cycle."},
+
+ {stem:"Which describes how ATP is generated in the light-dependent reactions?",
+  opts:["By hydrolysis of ADP, releasing energy","By hydrolysis of ADP, requiring energy",
+        "By phosphorylation of ADP, releasing energy","By phosphorylation of ADP, requiring energy"],
+  ans:3,
+  why:"ADP is phosphorylated, not hydrolysed, and building the bond requires energy rather than releasing it. It is ATP that is hydrolysed, releasing energy. Getting these two the right way round is a recurring mark."},
+
+ {stem:"Where do hydrogen ions (protons) accumulate during the light-dependent reactions?",
+  opts:["In the stroma","In the intermembrane space","In the thylakoid space","On the intergranal lamellae"],
+  ans:2,
+  why:"Protons accumulate inside the thylakoid space, building the gradient that drives ATP synthase. The intermembrane space is between the two envelope membranes and is not where the gradient forms."},
+
+ {stem:"Which type of bond is broken in a water molecule during photolysis?",
+  opts:["Covalent","Glycosidic","Hydrogen","Ionic"],
+  ans:0,
+  why:"Glycosidic bonds join monosaccharides, so they are in carbohydrates, not water. Hydrogen bonds form between water molecules, not within one. There are no ionic bonds in water."},
+
+ {stem:"Which wavelength of light is absorbed the least by chloroplasts?",
+  opts:["460 nm (blue)","520 nm (green)","600 nm (orange)","680 nm (red)"],
+  ans:1,
+  why:"Green wavelengths are reflected rather than absorbed, which is why leaves look green. Blue and red are the two absorption peaks."},
+
+ {stem:"A chloroplast pigment moved 6.0 cm while the solvent front moved 7.5 cm. What is its R<sub>f</sub> value?",
+  opts:["0.625","0.800","0.830","1.714"],
+  ans:1,
+  why:"R<sub>f</sub> is the distance moved by the pigment divided by the distance moved by the solvent front: 6.0 &divide; 7.5 = 0.800. The value 1.714 is the same calculation done upside down, which is the commonest slip."},
+
+ {stem:"Which molecule is produced in non-cyclic photophosphorylation but not in cyclic?",
+  opts:["ATP","ADP","Reduced NADP","RuBP"],
+  ans:2,
+  why:"ATP is produced in both routes &mdash; a point very few candidates make. Only non-cyclic produces reduced NADP and oxygen, because only non-cyclic involves photolysis of water."},
+
+ {stem:"Where in the chloroplast are the bonds in a glucose molecule formed?",
+  opts:["In the cytoplasm","In the matrix","In the stroma","On the thylakoid membrane"],
+  ans:2,
+  why:"There is no cytoplasm inside a chloroplast, and the matrix belongs to mitochondria. Glucose is synthesised from GALP in the stroma."},
+
+ {stem:"Which is a fuel that stores hydrogen in plants and seaweeds?",
+  opts:["ATP","Glucose","Glycogen","RUBISCO"],
+  ans:1,
+  why:"ATP transfers energy rather than storing hydrogen. Glycogen is the animal storage polysaccharide, not a plant one. RUBISCO is an enzyme, not a fuel."},
+
+ {stem:"Plants were grown under blue, amber and red light. Which would be the most appropriate positive control?",
+  opts:["Green light","A mixture of green, blue and red light","Ultraviolet light","Sunlight"],
+  ans:3,
+  why:"Sunlight is the normal condition and should give the expected result, so it is the positive control. Green light would be a negative control, and ultraviolet is not part of the visible spectrum."}
+];
+
+const WRITTEN = [
+ {tariff:3, stem:"Explain the role of light in the light-dependent reactions of photosynthesis.",
+  pts:[
+   {p:"Light is needed for photolysis of water.", ok:"A description of water being split also scores."},
+   {p:"The electrons released from the water replace those lost from the photosystems.", ok:"Or: the hydrogen ions are used to reduce NADP. Protons and H<sup>+</sup> both accepted."},
+   {p:"Light is needed to excite the electrons of the photosystems / chlorophyll.", no:"\u201CLight hits the chlorophyll\u201D is not credited \u2014 light is absorbed."},
+   {p:"Electrons from the photosystems are used to produce ATP and reduced NADP."}],
+  watch:"Two separate reports flag candidates writing about light \u201Chitting\u201D the chlorophyll. Use \u201Cabsorbed by\u201D every time."},
+
+ {tariff:2, stem:"Describe the role of photolysis in non-cyclic photophosphorylation.",
+  pts:[
+   {p:"Water is split.", no:"\u201CIt splits\u201D on its own is too vague \u2014 say what is split."},
+   {p:"The electrons replace those lost by the photosystems / chlorophyll."},
+   {p:"The hydrogen ions are involved in the formation of reduced NADP.", ok:"Protons or H<sup>+</sup> accepted for hydrogen ions."}],
+  watch:"Three things come out of photolysis \u2014 electrons, protons and oxygen. Two of the three earn the marks here."},
+
+ {tariff:4, stem:"Explain how light energy is converted into chemical energy in the form of ATP.",
+  pts:[
+   {p:"Light is absorbed by the photosystems / chlorophyll.", no:"Do not write that light hits the chlorophyll."},
+   {p:"This excites electrons, releasing them to a higher energy level."},
+   {p:"These electrons are passed along a series of electron carriers."},
+   {p:"Energy is released, phosphorylating ADP into ATP (cyclic route)."},
+   {p:"ADP is phosphorylated via the proton gradient to form ATP (non-cyclic route).", ok:"You only need to say \u201CADP is phosphorylated to ATP\u201D once to gain both of the last two marks."}],
+  watch:"The report says very few candidates mention that ATP is synthesised in both cyclic and non-cyclic photophosphorylation. Naming both routes is the difference between 3 and 4."},
+
+ {tariff:3, stem:"Explain the role of the products of the light-dependent reactions in the Calvin cycle.",
+  pts:[
+   {p:"GP is formed once carbon dioxide has bound to RuBP."},
+   {p:"ATP provides the energy to convert GP into GALP."},
+   {p:"Reduced NADP is used to reduce GP to GALP."}],
+  watch:"Both products need a job. ATP supplies energy; reduced NADP supplies the hydrogen. Naming only one caps you at two marks."},
+
+ {tariff:3, stem:"Describe how carbon becomes incorporated into plant biomass.",
+  pts:[
+   {p:"By carbon fixation.", ok:"A description scores too: carbon dioxide binds to or reacts with RuBP."},
+   {p:"Resulting in the formation of GP."},
+   {p:"Resulting in the formation of GALP or glucose."},
+   {p:"Which is used to make organic molecules.", ok:"A named organic molecule, such as cellulose or starch, scores."}],
+  watch:"The last mark point is the one least often awarded. Candidates end at glucose and never say what the glucose is used for \u2014 the question asked about biomass."},
+
+ {tariff:4, stem:"Explain how an increase in temperature from 10 \u00B0C to 35 \u00B0C affects the rate of photosynthesis.",
+  pts:[
+   {p:"An increase in temperature increases the kinetic energy of enzymes and substrates."},
+   {p:"Resulting in more collisions between enzymes and substrates.", ok:"More enzyme\u2013substrate complexes also scores."},
+   {p:"ATP synthase works faster.", ok:"ATP synthetase accepted."},
+   {p:"Therefore more ATP is available for the light-independent reactions."},
+   {p:"RUBISCO works faster."},
+   {p:"Therefore more glucose is produced by the Calvin cycle.", ok:"More carbon fixation, more GP or more GALP all score."}],
+  watch:"They want two named enzymes, each followed by its consequence. \u201CEnzymes work faster so photosynthesis increases\u201D is a GCSE answer and will not reach four marks."},
+
+ {tariff:4, stem:"Compare and contrast the structure of the outer membrane of a chloroplast with that of a thylakoid membrane.",
+  pts:[
+   {p:"Both consist of a phospholipid bilayer."},
+   {p:"Both contain proteins."},
+   {p:"The thylakoid membrane has chlorophyll and other pigments, whereas the outer membrane does not."},
+   {p:"The thylakoid membrane has electron carriers, whereas the outer membrane does not."},
+   {p:"The thylakoid membrane has ATP synthase, whereas the outer membrane does not.", ok:"ATPase accepted."}],
+  watch:"The mark scheme says DO NOT PIECE TOGETHER. Each difference must be a single paired sentence. Marks were also lost by candidates describing what the membranes do rather than what they are made of \u2014 the question says structure."},
+
+ {tariff:2, stem:"Explain why amino acids cannot be produced from glucose alone.",
+  pts:[
+   {p:"Because amino acids contain nitrogen.", ok:"Or: glucose does not contain nitrogen."},
+   {p:"Because some amino acids or R groups contain sulfur.", ok:"Or: glucose does not contain sulfur."},
+   {p:"Nitrogen is obtained from nitrates and sulfur from sulfates."}],
+  watch:"The report is explicit: saying that amino acids have an amino group which glucose lacks is \u201Cnot precise enough at this level\u201D. Name the element."},
+
+ {tariff:2, stem:"Explain the advantages of the thylakoids in a chloroplast having a large surface area.",
+  pts:[
+   {p:"So that more light is absorbed, or more chlorophyll is present.",
+    ok:"More photosystems, more electron carriers or more ATP synthase all score."},
+   {p:"So that more ATP and reduced NADP are generated, and more glucose or biomass is produced."}],
+  watch:"Marks were lost by answers that were not comparative and by answers that said only \u201Cphotosynthesis is faster\u201D without saying why that matters. Use \u201Cmore\u201D."},
+
+ {tariff:2, stem:"Explain why only a small proportion of the GALP produced in the Calvin cycle is used to make glucose.",
+  pts:[
+   {p:"Most of the GALP is used to regenerate RuBP."},
+   {p:"So that the Calvin cycle can continue and more carbon dioxide can be fixed."}],
+  watch:"Ten of every twelve GALP go back to RuBP. If the cycle did not regenerate its own acceptor it would stop after one turn."},
+
+ {tariff:2, stem:"Simple sugars have the formula C<sub>n</sub>H<sub>2n</sub>O<sub>n</sub>. Name the inorganic molecule that provides each element.",
+  pts:[
+   {p:"Carbon comes from carbon dioxide."},
+   {p:"Hydrogen comes from water."},
+   {p:"Oxygen comes from carbon dioxide.", no:"The mark scheme says explicitly: do not accept oxygen from water."}],
+  watch:"One or two correct scores 1 mark; all three scores 2. The oxygen is the trap \u2014 the oxygen gas released comes from water, but the oxygen inside the sugar comes from carbon dioxide."},
+
+ {tariff:2, stem:"Explain why light energy is converted into energy stored in ATP.",
+  pts:[
+   {p:"Because ATP is the source of energy for all living organisms.", ok:"\u201CEnergy currency\u201D or \u201Cusable source of energy\u201D accepted."},
+   {p:"Because light energy cannot be used directly."},
+   {p:"Because ATP is needed in the Calvin cycle to convert GP into GALP."}],
+  watch:"This asks why, not how. Candidates who described the mechanism scored one mark and then repeated themselves on the next part of the question."}
+];
+
+const CALCS = [
+ {tariff:2,
+  stem:"The rate of photosynthesis in a C<sub>4</sub> plant is 6 arbitrary units at 10 \u00B0C and 22 arbitrary units at 20 \u00B0C. Calculate the Q<sub>10</sub>. Give your answer as a whole number.",
+  steps:["Choose two temperatures that are 10 \u00B0C apart. Here, 10 \u00B0C and 20 \u00B0C.",
+         "Read off the rate at each: 6 at 10 \u00B0C, 22 at 20 \u00B0C.",
+         "Divide the rate at the higher temperature by the rate at the lower temperature: 22 \u00F7 6 = 3.67.",
+         "The question says whole number, so the answer is 4. Q<sub>10</sub> has no units \u2014 the mark scheme rejects an answer with units."],
+  ansNote:"A bald answer of 4 earns both marks. An answer of 3.58 to 3.67 earns one, because the rounding instruction was ignored.",
+  watch:"The commonest error is reading the rate at the lower temperature and then adding 10 to that rate. You add 10 to the temperature."},
+
+ {tariff:1,
+  stem:"On a chromatogram, pigment J moved 6.0 cm and the solvent front moved 7.5 cm. Calculate the R<sub>f</sub> value of pigment J.",
+  steps:["R<sub>f</sub> = distance moved by the pigment \u00F7 distance moved by the solvent front.",
+         "6.0 \u00F7 7.5 = 0.800."],
+  ansNote:"Give it to three decimal places as 0.800, matching the values used in the paper.",
+  watch:"Dividing the other way round gives 1.714, which is offered as a distractor. R<sub>f</sub> can never be greater than 1."},
+
+ {tariff:3,
+  stem:"A diagram of a chloroplast measures 9.6 cm across its widest point and is 16 000 times larger than the actual chloroplast. Calculate the surface area of the actual chloroplast using surface area = 4\u03C0r<sup>2</sup>. Give your answer as a whole number in \u00B5m<sup>2</sup>.",
+  steps:["Measure across the widest part and convert: 9.6 cm = 96 000 \u00B5m.",
+         "Divide by the magnification: 96 000 \u00F7 16 000 = 6 \u00B5m. That is the diameter.",
+         "Halve it for the radius: r = 3 \u00B5m.",
+         "4\u03C0r<sup>2</sup> = 4 \u00D7 \u03C0 \u00D7 3<sup>2</sup> = 113 \u00B5m<sup>2</sup> (108 to 113 accepted)."],
+  ansNote:"Error carried forward is available at every step, so write every line down even if you suspect the number is wrong.",
+  watch:"Five documented ways to lose marks here: sloppy ruler placement, cm to \u00B5m conversion, multiplying by 16 000 instead of dividing, using the diameter instead of the radius, and not rounding to a whole number."},
+
+ {tariff:1,
+  stem:"In 2017 the global seaweed harvest was 32.9 million tonnes, of which 96.6 % was cultivated. Calculate the mass of cultivated seaweed in standard form.",
+  steps:["32.9 \u00D7 0.966 = 31.78 million tonnes.",
+         "31.78 million = 31 780 000 = 3.18 \u00D7 10<sup>7</sup> tonnes."],
+  ansNote:"Standard form means one digit before the decimal point, then the power of ten.",
+  watch:"The report says candidates \u201Ccannot express an answer in standard form\u201D. It is a free mark once you have practised it twice."}
+];
+
+const RULES = [
+ "I wrote that light is absorbed, never that it hits.",
+ "Every effect I described had a direction: increases, decreases, faster, slower.",
+ "Every comparison was one paired sentence using whereas or but.",
+ "I named the molecule, enzyme or stage rather than saying \u201Cphotosynthesis\u201D.",
+ "I wrote phosphate not P, and reduced NADP not NADP.",
+ "I counted my points against the marks and then stopped writing."
+];
+
+/* ============ STATE ============ */
+const state = {mcq:{}, written:{}, calc:{}, rag:{}};
+const MCQ_MAX = MCQ.length;
+const WRI_MAX = WRITTEN.reduce((a,q)=>a+q.tariff,0);
+const CAL_MAX = CALCS.reduce((a,q)=>a+q.tariff,0);
+const TOTAL   = MCQ_MAX + WRI_MAX + CAL_MAX;
+
+/* ============ BUILD: MCQ ============ */
+const letters = ["A","B","C","D"];
+const mcqList = document.getElementById("mcqList");
+
+MCQ.forEach((q,qi)=>{
+  const card = document.createElement("div");
+  card.className = "q";
+  card.innerHTML =
+    '<div class="qhead"><span class="qno">Question '+(qi+1)+'</span><span class="tariff">(1)</span></div>'+
+    '<p class="stem">'+q.stem+'</p>';
+
+  const ul = document.createElement("ul");
+  ul.className = "opts";
+  q.opts.forEach((o,oi)=>{
+    const li = document.createElement("li");
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.type = "button";
+    b.innerHTML = '<span class="letter">'+letters[oi]+'</span><span>'+o+'</span>';
+    b.addEventListener("click",()=>answerMcq(qi,oi,card,ul));
+    li.appendChild(b);
+    ul.appendChild(li);
+  });
+  card.appendChild(ul);
+  mcqList.appendChild(card);
+});
+
+function answerMcq(qi,oi,card,ul){
+  if(qi in state.mcq) return;
+  state.mcq[qi] = (oi === MCQ[qi].ans) ? 1 : 0;
+  const correct = state.mcq[qi] === 1;
+  [...ul.querySelectorAll(".opt")].forEach((b,i)=>{
+    b.disabled = true;
+    if(i === MCQ[qi].ans) b.classList.add("right");
+    else if(i === oi) b.classList.add("wrong");
+    else b.classList.add("dim");
+  });
+  const v = document.createElement("div");
+  v.className = "verdict" + (correct ? "" : " miss");
+  v.innerHTML =
+    '<p class="head">'+(correct ? "Correct \u2014 1 mark." : "Not this one. The answer is "+letters[MCQ[qi].ans]+".")+'</p>'+
+    '<p>'+MCQ[qi].why+'</p>';
+  card.appendChild(v);
+  update();
+}
+
+/* ============ BUILD: WRITTEN ============ */
+const writtenList = document.getElementById("writtenList");
+
+WRITTEN.forEach((q,qi)=>{
+  state.written[qi] = new Set();
+  const card = document.createElement("div");
+  card.className = "q";
+
+  const head = document.createElement("div");
+  head.className = "qhead";
+  head.innerHTML = '<span class="qno">Question '+(qi+1)+'</span><span class="tariff">('+q.tariff+')</span>';
+  card.appendChild(head);
+
+  const stem = document.createElement("p");
+  stem.className = "stem";
+  stem.innerHTML = q.stem;
+  card.appendChild(stem);
+
+  const ta = document.createElement("textarea");
+  ta.rows = Math.max(4, q.tariff + 1);
+  ta.setAttribute("aria-label","Your answer to question "+(qi+1));
+  ta.placeholder = "Write your answer here\u2026";
+  card.appendChild(ta);
+
+  const btn = document.createElement("button");
+  btn.className = "reveal";
+  btn.type = "button";
+  btn.textContent = "Show the mark scheme";
+  card.appendChild(btn);
+
+  const ms = document.createElement("div");
+  ms.className = "ms";
+  ms.hidden = true;
+
+  const more = q.pts.length > q.tariff;
+  ms.innerHTML =
+    '<h3>Mark scheme</h3>'+
+    '<p class="rule">Tick only what you actually wrote.'+
+      (more ? ' There are '+q.pts.length+' possible points and the question is worth '+q.tariff+', so any '+q.tariff+' of them score full marks.' : '')+
+    '</p>';
+
+  q.pts.forEach((pt,pi)=>{
+    const lab = document.createElement("label");
+    lab.className = "mp";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    const body = document.createElement("div");
+    body.className = "body";
+    let inner = '<span class="point">'+pt.p+'</span>';
+    if(pt.ok) inner += '<span class="note">Also accepted: '+pt.ok+'</span>';
+    if(pt.no) inner += '<span class="note no">'+pt.no+'</span>';
+    body.innerHTML = inner;
+    lab.appendChild(cb);
+    lab.appendChild(body);
+    cb.addEventListener("change",()=>{
+      if(cb.checked) state.written[qi].add(pi); else state.written[qi].delete(pi);
+      lab.classList.toggle("got", cb.checked);
+      renderScoreline(qi, line, q);
+      update();
+    });
+    ms.appendChild(lab);
+  });
+
+  const watch = document.createElement("div");
+  watch.className = "watch";
+  watch.innerHTML = '<b>What the examiners reported</b>'+q.watch;
+  ms.appendChild(watch);
+
+  const line = document.createElement("div");
+  line.className = "scoreline";
+  ms.appendChild(line);
+  renderScoreline(qi, line, q);
+
+  card.appendChild(ms);
+  writtenList.appendChild(card);
+
+  btn.addEventListener("click",()=>{
+    ms.hidden = !ms.hidden;
+    btn.textContent = ms.hidden ? "Show the mark scheme" : "Hide the mark scheme";
+  });
+});
+
+function renderScoreline(qi, el, q){
+  const got = Math.min(state.written[qi].size, q.tariff);
+  el.innerHTML = '<span>Your score for this question</span><b>'+got+' / '+q.tariff+'</b>';
+}
+
+/* ============ BUILD: CALCULATIONS ============ */
+const calcList = document.getElementById("calcList");
+
+CALCS.forEach((q,qi)=>{
+  state.calc[qi] = 0;
+  const card = document.createElement("div");
+  card.className = "q";
+  card.innerHTML =
+    '<div class="qhead"><span class="qno">Calculation '+(qi+1)+'</span><span class="tariff">('+q.tariff+')</span></div>'+
+    '<p class="stem">'+q.stem+'</p>';
+
+  const box = document.createElement("input");
+  box.className = "answerbox";
+  box.type = "text";
+  box.placeholder = "Your answer";
+  box.setAttribute("aria-label","Your answer to calculation "+(qi+1));
+  card.appendChild(box);
+  card.appendChild(document.createElement("br"));
+
+  const btn = document.createElement("button");
+  btn.className = "reveal";
+  btn.type = "button";
+  btn.textContent = "Show the method";
+  card.appendChild(btn);
+
+  const ms = document.createElement("div");
+  ms.className = "ms";
+  ms.hidden = true;
+  const ol = document.createElement("ol");
+  ol.className = "steps";
+  q.steps.forEach(s=>{ const li=document.createElement("li"); li.innerHTML=s; ol.appendChild(li); });
+  ms.innerHTML = '<h3>Method</h3>';
+  ms.appendChild(ol);
+
+  const note = document.createElement("p");
+  note.className = "capnote";
+  note.style.marginTop = "12px";
+  note.innerHTML = q.ansNote;
+  ms.appendChild(note);
+
+  const watch = document.createElement("div");
+  watch.className = "watch";
+  watch.innerHTML = '<b>What the examiners reported</b>'+q.watch;
+  ms.appendChild(watch);
+
+  const self = document.createElement("div");
+  self.className = "scoreline";
+  self.innerHTML = '<span>How many of the '+q.tariff+' marks did you earn?</span>';
+  const grp = document.createElement("span");
+  for(let m=0;m<=q.tariff;m++){
+    const b=document.createElement("button");
+    b.className="reveal";
+    b.type="button";
+    b.style.cssText="margin:0 0 0 6px;padding:6px 14px;font-size:15px;background:#fff;color:var(--green-deep);border:1px solid var(--rule)";
+    b.textContent=m;
+    b.addEventListener("click",()=>{
+      state.calc[qi]=m;
+      [...grp.children].forEach(c=>{
+        c.style.background="#fff"; c.style.color="var(--green-deep)"; c.style.borderColor="var(--rule)";
+      });
+      b.style.background="var(--green-deep)"; b.style.color="#fff"; b.style.borderColor="var(--green-deep)";
+      update();
+    });
+    grp.appendChild(b);
+  }
+  self.appendChild(grp);
+  ms.appendChild(self);
+
+  card.appendChild(ms);
+  calcList.appendChild(card);
+
+  btn.addEventListener("click",()=>{
+    ms.hidden = !ms.hidden;
+    btn.textContent = ms.hidden ? "Show the method" : "Hide the method";
+  });
+});
+
+/* ============ BUILD: RAG ============ */
+const ragList = document.getElementById("ragList");
+RULES.forEach((r,ri)=>{
+  const row = document.createElement("div");
+  row.className = "ragrow";
+  const lab = document.createElement("span");
+  lab.className = "lab";
+  lab.textContent = r;
+  const btns = document.createElement("div");
+  btns.className = "ragbtns";
+  [["r","Not yet"],["a","Sometimes"],["g","Every time"]].forEach(([v,t])=>{
+    const b = document.createElement("button");
+    b.type = "button"; b.dataset.v = v; b.textContent = t;
+    b.setAttribute("aria-pressed","false");
+    b.addEventListener("click",()=>{
+      state.rag[ri]=v;
+      [...btns.children].forEach(c=>c.setAttribute("aria-pressed", c===b ? "true":"false"));
+      renderAdvice();
+    });
+    btns.appendChild(b);
+  });
+  row.appendChild(lab); row.appendChild(btns);
+  ragList.appendChild(row);
+});
+
+/* ============ TABS ============ */
+const tabs = [...document.querySelectorAll("nav button")];
+tabs.forEach(t=>{
+  t.addEventListener("click",()=>{
+    tabs.forEach(x=>x.setAttribute("aria-selected", x===t ? "true":"false"));
+    ["mcq","written","calc","summary"].forEach(id=>{
+      document.getElementById("tab-"+id).hidden = (id !== t.dataset.tab);
+    });
+    if(t.dataset.tab === "summary") renderAdvice();
+    window.scrollTo({top:0, behavior:"smooth"});
+  });
+});
+
+/* ============ SCORING ============ */
+function scores(){
+  const m = Object.values(state.mcq).reduce((a,b)=>a+b,0);
+  const w = WRITTEN.reduce((a,q,i)=>a+Math.min(state.written[i].size, q.tariff),0);
+  const c = Object.values(state.calc).reduce((a,b)=>a+b,0);
+  return {m,w,c,t:m+w+c};
+}
+
+function update(){
+  const s = scores();
+  document.getElementById("tallyNum").textContent = s.t;
+  document.getElementById("tallySeg").textContent =
+    "Multiple choice "+s.m+"/"+MCQ_MAX+"\u00A0\u00A0 Written "+s.w+"/"+WRI_MAX+"\u00A0\u00A0 Calculations "+s.c+"/"+CAL_MAX;
+  document.getElementById("sumNum").textContent = s.t;
+  document.getElementById("bdMcq").textContent = s.m+" / "+MCQ_MAX;
+  document.getElementById("bdWri").textContent = s.w+" / "+WRI_MAX;
+  document.getElementById("bdCal").textContent = s.c+" / "+CAL_MAX;
+  document.getElementById("sumBar").style.width = Math.round(s.t/TOTAL*100)+"%";
+  renderAdvice();
+}
+
+/* ============ ADVICE ============ */
+function renderAdvice(){
+  const box = document.getElementById("advice");
+  const missed = [];
+  WRITTEN.forEach((q,i)=>{
+    const set = state.written[i];
+    if(set.size === 0) return;                    // untouched, don't nag
+    q.pts.forEach((pt,pi)=>{ if(!set.has(pi)) missed.push({q:i, text:pt.p}); });
+  });
+  const reds = Object.entries(state.rag).filter(([,v])=>v==="r").map(([k])=>RULES[k]);
+  const ambers = Object.entries(state.rag).filter(([,v])=>v==="a").map(([k])=>RULES[k]);
+
+  if(missed.length === 0 && reds.length === 0 && ambers.length === 0){
+    box.innerHTML = '<p class="empty">Work through the questions and this fills in with the specific mark points you missed.</p>';
+    return;
+  }
+
+  let html = "";
+  if(reds.length || ambers.length){
+    html += '<p style="margin:0 0 6px;font-weight:600">Rules to fix first</p><ul>';
+    reds.forEach(r=>{ html += '<li>'+r+'</li>'; });
+    ambers.forEach(r=>{ html += '<li>'+r+' <span style="color:var(--ink-soft)">(sometimes is not enough under exam pressure)</span></li>'; });
+    html += '</ul>';
+  }
+  if(missed.length){
+    const shown = missed.slice(0,10);
+    html += '<p style="margin:'+(reds.length||ambers.length ? '18px':'0')+' 0 6px;font-weight:600">Mark points you did not make</p><ul>';
+    shown.forEach(m=>{ html += '<li><span style="color:var(--ink-soft)">Question '+(m.q+1)+' &mdash; </span>'+m.text+'</li>'; });
+    html += '</ul>';
+    if(missed.length > shown.length){
+      html += '<p style="color:var(--ink-soft);font-size:15.5px">\u2026and '+(missed.length-shown.length)+' more. Rewrite the two questions you scored lowest on, from memory, tonight.</p>';
+    }
+  }
+  box.innerHTML = html;
+}
+
+update();
+</script>
+</body>
+</html>
